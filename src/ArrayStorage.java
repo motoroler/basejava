@@ -4,35 +4,30 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private final int arraySize = 10_000;
-    private Resume[] storage = new Resume[arraySize];
+    private final int ARRAY_SIZE = 10_000;
+    private Resume[] storage = new Resume[ARRAY_SIZE];
     private int nextFreeElement = 0;
 
-    private boolean isAddable() {
-        if (nextFreeElement >= arraySize) {
-            System.out.println("WARNING! Storage is full!");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0, nextFreeElement, null);
         System.out.println("The storage was cleared");
         nextFreeElement = 0;
     }
 
     void save(Resume r) {
-        if (isAddable()) {
+        if (nextFreeElement < ARRAY_SIZE) {
             storage[nextFreeElement++] = r;
             System.out.printf("New resume %s was added to the storage\n", r);
+        } else {
+            System.out.println("WARNING! Storage is full!");
         }
     }
 
     Resume get(String uuid) {
         for (int i = 0; i < nextFreeElement; i++) {
-            if (storage[i].toString().equals(uuid)) return storage[i];
+            if (storage[i].toString().equals(uuid)) {
+                return storage[i];
+            }
         }
         System.out.printf("Resume %s was not found\n", uuid);
         return null;
