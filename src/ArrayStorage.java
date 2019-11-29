@@ -36,11 +36,9 @@ public class ArrayStorage {
     void delete(String uuid) {
         for (int i = 0; i < nextFreeElement; i++) {
             if (storage[i].toString().equals(uuid)) {
-                for (int j = i; j < nextFreeElement - 1; j++) {
-                    storage[j] = storage[j + 1];// remove storage[i] with uuid and shift storage[i+1] and above to the storage's beginning
-                }
-                nextFreeElement--;
-                System.out.printf("%s resume was deleted\n", uuid);
+                storage[i] = i == nextFreeElement-1 ? null : storage[nextFreeElement - 1];
+                storage[nextFreeElement-- -1] = null;
+                System.out.printf( "%s resume was deleted\n", uuid);
                 break;
             }
         }
