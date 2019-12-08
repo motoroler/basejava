@@ -19,7 +19,7 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (0 <= getIndex(resume.getUuid())) {
+        if (getIndex(resume.getUuid()) >= 0) {
             System.out.printf("ERROR: You try to add CV %s, which already existed in the storage\n", resume);
         } else if (size < ARRAY_SIZE) {
                 storage[size++] = resume;
@@ -31,7 +31,7 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (0 <= index) {
+        if (index >= 0) {
             return storage[index];
         }
         System.out.printf("Resume %s was not found\n", uuid);
@@ -40,7 +40,7 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (0 <= index) {
+        if (index >= 0) {
             storage[index] = storage[size - 1];
             storage[size-- -1] = null;
             System.out.printf( "%s resume was deleted\n", uuid);
@@ -51,8 +51,10 @@ public class ArrayStorage {
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
-        if (0 <= index) {
+        if (index >= 0) {
             storage[index] = resume;
+        } else {
+            System.out.println("ERROR: Provided CV doesn't exist in the storage");
         }
     }
 
