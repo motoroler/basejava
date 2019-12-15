@@ -8,8 +8,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private final int ARRAY_SIZE = 10_000;
-    private Resume[] storage = new Resume[ARRAY_SIZE];
+    private final static int STORAGE_LIMIT = 10_000;
+    private Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
     public void clear() {
@@ -21,7 +21,7 @@ public class ArrayStorage {
     public void save(Resume resume) {
         if (getIndex(resume.getUuid()) >= 0) {
             System.out.printf("ERROR: You try to add CV %s, which already existed in the storage\n", resume);
-        } else if (size < ARRAY_SIZE) {
+        } else if (size < STORAGE_LIMIT) {
                 storage[size++] = resume;
                 System.out.printf("New resume %s was added to the storage\n", resume);
         } else {
@@ -74,7 +74,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
     public int size() {
