@@ -3,7 +3,7 @@ package ru.javawebinar.basejava.model;
 import java.util.Objects;
 
 /**
- *  ru.javawebinar.basejava.model.Resume class
+ * ru.javawebinar.basejava.model.Resume class
  */
 public class Resume implements Comparable<Resume> {
 
@@ -35,7 +35,6 @@ public class Resume implements Comparable<Resume> {
     public String toString() {
         return uuid;
     }
-
 
     @Override
     public int compareTo(Resume o) {
