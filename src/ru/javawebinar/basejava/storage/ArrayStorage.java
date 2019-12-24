@@ -8,11 +8,8 @@ import ru.javawebinar.basejava.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void save(Resume resume) {
-        if (isBasicCheckPassed(resume)) {
-            storage[size++] = resume;
-            System.out.printf("New resume %s was added to the storage\n", resume);
-        }
+    public void doSave(Resume resume) {
+        storage[size++] = resume;
     }
 
     @Override

@@ -7,15 +7,12 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void save(Resume resume) {
-        if (isBasicCheckPassed(resume)) {
-            int placeResumeHere = Math.abs(getIndex(resume.getUuid()) + 1);
-            for (int i = size++; i > placeResumeHere; i--) {
-                storage[i] = storage[i - 1];
-            }
-            storage[placeResumeHere] = resume;
-            System.out.printf("New resume %s was added to the storage\n", resume);
+    public void doSave(Resume resume) {
+        int placeResumeHere = Math.abs(getIndex(resume.getUuid()) + 1);
+        for (int i = size++; i > placeResumeHere; i--) {
+            storage[i] = storage[i - 1];
         }
+        storage[placeResumeHere] = resume;
     }
 
     @Override

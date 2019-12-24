@@ -47,16 +47,6 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    protected boolean isBasicCheckPassed(Resume resume) {
-        if (getIndex(resume.getUuid()) >= 0) {
-            System.out.printf("ERROR: You try to add CV %s, which already exists in the storage\n", resume);
-            return false;
-        } else if (size >= STORAGE_LIMIT) {
-            System.out.println("WARNING! Storage is full!");
-        }
-        return true;
-    }
-
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
@@ -67,4 +57,17 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     protected abstract void doDeletion(String uuid, int index);
+
+    public void save(Resume resume) {
+        if (getIndex(resume.getUuid()) >= 0) {
+            System.out.printf("ERROR: You try to add CV %s, which already exists in the storage\n", resume);
+        } else if (size >= STORAGE_LIMIT) {
+            System.out.println("WARNING! Storage is full!");
+        } else {
+            doSave(resume);
+            System.out.printf("New resume %s was added to the storage\n", resume);
+        }
+    }
+
+    protected abstract void doSave(Resume resume);
 }
