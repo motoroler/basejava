@@ -35,7 +35,7 @@ public abstract class AbstractArrayStorage implements Storage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+        return Arrays.copyOf(storage, size);
     }
 
     public void update(Resume resume) {
@@ -49,25 +49,29 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index < 0) {
-            System.out.println("ERROR: Provided CV doesn't exist in the storage");
+        if (index >= 0) {
+            doDeletion(index);
+            storage[size-- - 1] = null;
+            System.out.printf("%s resume was deleted\n", uuid);
         } else {
-            doDeletion(uuid, index);
+            System.out.println("ERROR: Provided CV doesn't exist in the storage");
         }
     }
 
-    protected abstract void doDeletion(String uuid, int index);
+    protected abstract void doDeletion(int index);
 
     public void save(Resume resume) {
-        if (getIndex(resume.getUuid()) >= 0) {
+        int index = getIndex(resume.getUuid());
+        if (index >= 0) {
             System.out.printf("ERROR: You try to add CV %s, which already exists in the storage\n", resume);
         } else if (size >= STORAGE_LIMIT) {
             System.out.println("WARNING! Storage is full!");
         } else {
-            doSave(resume);
+            doSave(resume, index);
+            size++;
             System.out.printf("New resume %s was added to the storage\n", resume);
         }
     }
 
-    protected abstract void doSave(Resume resume);
+    protected abstract void doSave(Resume resume, int index);
 }
