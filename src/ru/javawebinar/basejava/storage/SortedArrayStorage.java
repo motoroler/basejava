@@ -8,17 +8,17 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void doSave(Resume resume, int index) {
-        int placeResumeHere = Math.abs(++index);
-        for (int i = size; i > placeResumeHere; i--) {
-            storage[i] = storage[i - 1];
+        int position = Math.abs(++index);
+        if (size - position >= 0) {
+            System.arraycopy(storage, position, storage, position + 1, size - position);
         }
-        storage[placeResumeHere] = resume;
+        storage[position] = resume;
     }
 
     @Override
     protected void doDeletion(int index) {
-        for (int i = index; i < size() - 1; i++) {
-            storage[i] = storage[i + 1];
+        if (size - 1 - index >= 0) {
+            System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
         }
     }
 
