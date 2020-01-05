@@ -1,11 +1,14 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage {
-    protected final static int STORAGE_LIMIT = 10_000;
+    public final static int STORAGE_LIMIT = 10_000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
@@ -18,8 +21,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             return storage[index];
         }
-        System.out.printf("Resume %s was not found\n", uuid);
-        return null;
+        throw new NotExistStorageException(uuid);
     }
 
     protected abstract int getIndex(String uuid);
@@ -43,35 +45,36 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             storage[index] = resume;
         } else {
-            System.out.println("ERROR: Provided CV doesn't exist in the storage");
+            throw new NotExistStorageException(resume.getUuid());
         }
     }
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
-            doDeletion(index);
+            fillDeletedElement(index);
             storage[size-- - 1] = null;
             System.out.printf("%s resume was deleted\n", uuid);
         } else {
-            System.out.println("ERROR: Provided CV doesn't exist in the storage");
+            throw new NotExistStorageException(uuid);
         }
     }
 
-    protected abstract void doDeletion(int index);
+    protected abstract void fillDeletedElement(int index);
 
     public void save(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index >= 0) {
-            System.out.printf("ERROR: You try to add CV %s, which already exists in the storage\n", resume);
+            throw new ExistStorageException(resume.getUuid());
         } else if (size >= STORAGE_LIMIT) {
-            System.out.println("WARNING! Storage is full!");
+            System.out.println();
+            throw new StorageException("WARNING! Storage is full!", resume.getUuid());
         } else {
-            doSave(resume, index);
+            insertElement(resume, index);
             size++;
             System.out.printf("New resume %s was added to the storage\n", resume);
         }
     }
 
-    protected abstract void doSave(Resume resume, int index);
+    protected abstract void insertElement(Resume resume, int index);
 }
