@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.storage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -13,6 +14,10 @@ abstract class AbstractArrayStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
 
+    private static final Resume resume1 = new Resume(UUID_1);
+    private static final Resume resume2 = new Resume(UUID_2);
+    private static final Resume resume3 = new Resume(UUID_3);
+
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
@@ -20,9 +25,9 @@ abstract class AbstractArrayStorageTest {
     @BeforeEach
     void setUp() throws Exception {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
+        storage.save(resume1);
+        storage.save(resume2);
+        storage.save(resume3);
     }
 
     @Test
@@ -53,21 +58,36 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void update() throws Exception {
+        storage.update(resume1);
+        Assertions.assertEquals(resume1, storage.get(UUID_1));
+    }
+
+    @Test
+    void updateNotExist() throws Exception {
         Assertions.assertThrows(NotExistStorageException.class, () -> storage.update(new Resume("dummy")));
     }
 
     @Test
     void delete() throws Exception {
-        Assertions.assertThrows(NotExistStorageException.class, () -> {
-            storage.delete(UUID_1);
-            storage.get(UUID_1);
-        });
+        storage.delete(UUID_1);
+        Assertions.assertEquals(2, storage.size());
+
+    }
+
+    @Test
+    void deleteNotExist() throws Exception {
+        Assertions.assertThrows(NotExistStorageException.class, () -> storage.delete("dummy"));
     }
 
     @Test
     void save() throws Exception {
         storage.save(new Resume("4"));
-        Assertions.assertEquals(new Resume("4"), storage.get("4"));
+        Assertions.assertEquals(4, storage.size());
+    }
+
+    @Test
+    void saveAlreadyExist() throws Exception {
+        Assertions.assertThrows(ExistStorageException.class, () -> storage.save(resume1));
     }
 
     @Test
