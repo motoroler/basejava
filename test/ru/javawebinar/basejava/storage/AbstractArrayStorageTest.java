@@ -20,7 +20,7 @@ abstract class AbstractArrayStorageTest {
     private static final Resume RESUME_3 = new Resume(UUID_3);
     private static final Resume RESUME_DUMMY = new Resume(UUID_DUMMY);
 
-    public AbstractArrayStorageTest(Storage storage) {
+    protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -61,8 +61,9 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void update() throws Exception {
-        storage.update(RESUME_1);
-        Assertions.assertEquals(RESUME_1, storage.get(UUID_1));
+        Resume resume1 = new Resume(UUID_1);
+        storage.update(resume1);
+        Assertions.assertEquals(resume1, storage.get(UUID_1));
     }
 
     @Test
@@ -96,8 +97,8 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void storageOverflow() throws Exception {
-        for (int i = storage.size() + 1; i <= AbstractArrayStorage.STORAGE_LIMIT; i++) {
-            storage.save(new Resume(Integer.toString(i)));
+        for (int i = storage.size(); i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+            storage.save(new Resume(Integer.toString(i + 1)));
         }
         Assertions.assertThrows(StorageException.class, () -> storage.save(new Resume()), "Extra resume could be added");
     }
