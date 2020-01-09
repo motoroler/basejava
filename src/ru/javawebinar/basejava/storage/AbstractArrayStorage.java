@@ -1,80 +1,60 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     public final static int STORAGE_LIMIT = 10_000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    @Override
     public int size() {
         return size;
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            return storage[index];
-        }
-        throw new NotExistStorageException(uuid);
+    @Override
+    protected Resume storageGet(int index) {
+        return storage[index];
     }
 
-    protected abstract int getIndex(String uuid);
+    @Override
+    protected void storageSet(int index, Resume resume) {
+        storage[index] = resume;
+    }
 
-
+    @Override
     public void clear() {
+        super.clear();
         Arrays.fill(storage, 0, size, null);
-        System.out.println("The storage was cleared");
         size = 0;
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            storage[index] = resume;
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+    @Override
+    protected void fillDeletedElement(int index) {
+        storage[size-- - 1] = null;
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            fillDeletedElement(index);
-            storage[size-- - 1] = null;
-            System.out.printf("%s resume was deleted\n", uuid);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    @Override
+    protected void incrementSize() {
+        size++;
     }
 
-    protected abstract void fillDeletedElement(int index);
-
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else if (size >= STORAGE_LIMIT) {
+    @Override
+    protected void checkStorageLimitCondition(Resume resume) {
+        if (size >= STORAGE_LIMIT) {
             System.out.println();
             throw new StorageException("WARNING! Storage is full!", resume.getUuid());
-        } else {
-            insertElement(resume, index);
-            size++;
-            System.out.printf("New resume %s was added to the storage\n", resume);
         }
     }
-
-    protected abstract void insertElement(Resume resume, int index);
 }
