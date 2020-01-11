@@ -20,7 +20,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         if (size - 1 - index >= 0) {
             System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
         }
-        super.fillDeletedElement(index);
     }
 
     @Override

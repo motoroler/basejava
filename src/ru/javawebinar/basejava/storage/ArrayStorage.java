@@ -15,6 +15,19 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void fillDeletedElement(int index) {
         storage[index] = storage[size - 1];
-        super.fillDeletedElement(index);
+    }
+
+    /**
+     * @param uuid
+     * @return index of uuid in the storage, if it exists in the storage. Otherwise -1 will be returned
+     */
+    @Override
+    protected int getIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
