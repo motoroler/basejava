@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.LinkedList;
@@ -15,14 +13,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index >= 0) {
-            storage.remove(index);
-            System.out.printf("%s resume was deleted\n", uuid);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    protected void doDelete(int index) {
+        storage.remove(index);
     }
 
     @Override
@@ -31,7 +23,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSet(int index, Resume resume) {
+    protected void doUpdate(int index, Resume resume) {
         storage.set(index, resume);
     }
 
@@ -47,14 +39,9 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            storage.add(resume);
-            System.out.printf("New resume %s was added to the storage\n", resume);
-        }
+    protected void doSave(Resume resume, int index) {
+        storage.add(resume);
+        System.out.printf("New resume %s was added to the storage\n", resume);
     }
 
     @Override
