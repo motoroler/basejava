@@ -29,7 +29,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public void clear() {
-        storage.removeAll(storage);
+        storage.clear();
         System.out.println("The storage was cleared");
     }
 
