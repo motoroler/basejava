@@ -56,11 +56,11 @@ abstract class AbstractStorageTest {
 
     @Test
     void getAll() throws Exception {
-        Resume[] resumes = {RESUME_1, RESUME_2, RESUME_3};
-        Resume[] storageAll = storage.getAll();
-        Assertions.assertEquals(resumes.length, storageAll.length);
-        for (Resume resume : resumes) {
-            Assertions.assertTrue(Arrays.asList(storageAll).contains(resume));
+        Resume[] expectedResumes = {RESUME_1, RESUME_2, RESUME_3};
+        Resume[] actualResumes = storage.getAll();
+        Assertions.assertEquals(expectedResumes.length, actualResumes.length);
+        for (Resume resume : expectedResumes) {
+            Assertions.assertTrue(Arrays.asList(actualResumes).contains(resume));
         }
     }
 

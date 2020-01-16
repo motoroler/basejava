@@ -13,8 +13,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doDelete(int index) {
-        storage.remove(index);
+    protected void doDelete(int id) {
+        storage.remove(id);
     }
 
     @Override
@@ -23,8 +23,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(int index, Resume resume) {
-        storage.set(index, resume);
+    protected void doUpdate(int id, Resume resume) {
+        storage.set(id, resume);
     }
 
     @Override
@@ -39,13 +39,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Resume resume, int index) {
+    protected void doSave(Resume resume, int id) {
         storage.add(resume);
         System.out.printf("New resume %s was added to the storage\n", resume);
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected int getId(String uuid) {
         for (int i = 0; i < size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;

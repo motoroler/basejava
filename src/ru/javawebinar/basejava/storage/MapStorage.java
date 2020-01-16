@@ -3,10 +3,11 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MapStorage extends AbstractStorage {
-    private final static HashMap<Integer, Resume> storage = new HashMap<>();
+    private final static Map<Integer, Resume> storage = new HashMap<>();
 
     @Override
     public int size() {
@@ -14,18 +15,18 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doDelete(int index) {
-        storage.remove(index);
+    protected void doDelete(int id) {
+        storage.remove(id);
     }
 
     @Override
-    protected Resume doGet(int index) {
-        return storage.get(index);
+    protected Resume doGet(int id) {
+        return storage.get(id);
     }
 
     @Override
-    protected void doUpdate(int index, Resume resume) {
-        storage.put(index, resume);
+    protected void doUpdate(int id, Resume resume) {
+        storage.put(id, resume);
     }
 
     @Override
@@ -39,12 +40,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Resume resume, int index) {
-        storage.put(-index, resume);
+    protected void doSave(Resume resume, int id) {
+        storage.put(-id, resume);
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected int getId(String uuid) {
         int hashCode = Objects.hashCode(uuid);
         if (storage.containsKey(hashCode)) {
             return hashCode;

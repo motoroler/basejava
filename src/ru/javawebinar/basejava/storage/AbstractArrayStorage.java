@@ -15,7 +15,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract int getIndex(String uuid);
+    protected abstract int getId(String uuid);
 
     @Override
     public void clear() {
@@ -32,34 +32,34 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    protected abstract void fillDeletedElement(int index);
+    protected abstract void fillDeletedElement(int id);
 
-    protected abstract void insertElement(Resume resume, int index);
+    protected abstract void insertElement(Resume resume, int id);
 
     @Override
-    protected Resume doGet(int index) {
-        return storage[index];
+    protected Resume doGet(int id) {
+        return storage[id];
     }
 
     @Override
-    protected void doUpdate(int index, Resume resume) {
-        storage[index] = resume;
+    protected void doUpdate(int id, Resume resume) {
+        storage[id] = resume;
     }
 
     @Override
-    protected void doSave(Resume resume, int index) {
+    protected void doSave(Resume resume, int id) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("WARNING! Storage is full!", resume.getUuid());
         } else {
-            insertElement(resume, index);
+            insertElement(resume, id);
             size++;
             System.out.printf("New resume %s was added to the storage\n", resume);
         }
     }
 
     @Override
-    protected void doDelete(int index) {
-        fillDeletedElement(index);
+    protected void doDelete(int id) {
+        fillDeletedElement(id);
         storage[size-- - 1] = null;
     }
 }
