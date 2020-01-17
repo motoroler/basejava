@@ -7,46 +7,25 @@ import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    public Resume doOperation(Resume resume, String operation, String uuid, StorageException exception) {
+    private int doOperation(String uuid, StorageException storageException, int direction) {
         int id = getId(uuid);
-        if (id >= 0) {
-            switch (operation) {
-                case ("update"):
-                    doUpdate(id, resume);
-                    break;
-                case ("get"):
-                    return doGet(id);
-                case ("delete"):
-                    doDelete(id);
-                    System.out.printf("%s resume was deleted\n", uuid);
-                    break;
-                case ("save"):
-                    throw exception;
-            }
+        if ((direction * id > 0) || (id == 0 && direction > 0)) {
+            return id;
         } else {
-            switch (operation) {
-                case ("update"):
-                case ("get"):
-                case ("delete"):
-                    throw exception;
-                case ("save"):
-                    doSave(resume, id);
-                    break;
-            }
+            throw storageException;
         }
-        return null;
     }
 
     @Override
     public void update(Resume resume) {
-        doOperation(resume, "update", resume.getUuid(), new NotExistStorageException(resume.getUuid()));
+        doUpdate(doOperation(resume.getUuid(), new NotExistStorageException(resume.getUuid()), 1), resume);
     }
 
     protected abstract int getId(String uuid);
 
     @Override
     public Resume get(String uuid) {
-        return doOperation(null, "get", uuid, new NotExistStorageException(uuid));
+        return doGet(doOperation(uuid, new NotExistStorageException(uuid), 1));
     }
 
     protected abstract Resume doGet(int id);
@@ -55,14 +34,15 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        doOperation(resume, "save", resume.getUuid(), new ExistStorageException(resume.getUuid()));
+        doSave(resume, doOperation(resume.getUuid(), new ExistStorageException(resume.getUuid()), -1));
     }
 
     protected abstract void doSave(Resume resume, int id);
 
     @Override
     public void delete(String uuid) {
-        doOperation(null, "delete", uuid, new NotExistStorageException(uuid));
+        doDelete(doOperation(uuid, new NotExistStorageException(uuid), 1));
+        System.out.printf("%s resume was deleted\n", uuid);
     }
 
     protected abstract void doDelete(int id);

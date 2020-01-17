@@ -8,7 +8,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void insertElement(Resume resume, int id) {
-        int position = Math.abs(++id);
+        int position = -id - 1;
         if (size - position >= 0) {
             System.arraycopy(storage, position, storage, position + 1, size - position);
         }
