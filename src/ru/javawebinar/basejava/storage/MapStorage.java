@@ -4,10 +4,9 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class MapStorage extends AbstractStorage {
-    private final static Map<Integer, Resume> storage = new HashMap<>();
+    private final static Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public int size() {
@@ -15,18 +14,18 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doDelete(int id) {
-        storage.remove(id);
+    protected void doDelete(Object id) {
+        storage.remove((String) id);
     }
 
     @Override
-    protected Resume doGet(int id) {
-        return storage.get(id);
+    protected Resume doGet(Object id) {
+        return storage.get((String) id);
     }
 
     @Override
-    protected void doUpdate(int id, Resume resume) {
-        storage.put(id, resume);
+    protected void doUpdate(Object id, Resume resume) {
+        storage.put((String) id, resume);
     }
 
     @Override
@@ -40,16 +39,17 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Resume resume, int id) {
-        storage.put(-id, resume);
+    protected void doSave(Resume resume, Object id) {
+        storage.put((String) id, resume);
     }
 
     @Override
-    protected int getId(String uuid) {
-        int hashCode = Objects.hashCode(uuid);
-        if (storage.containsKey(hashCode)) {
-            return hashCode;
-        }
-        return -hashCode;
+    protected Object getId(String uuid) {
+        return uuid;
+    }
+
+    @Override
+    protected boolean isExist(Object id) {
+        return (storage.containsKey(id));
     }
 }

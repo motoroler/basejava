@@ -2,48 +2,56 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    private int doOperation(String uuid, StorageException storageException, int direction) {
-        int id = getId(uuid);
-        if ((direction * id > 0) || (id == 0 && direction > 0)) {
-            return id;
-        } else {
-            throw storageException;
+    protected abstract Object getId(String uuid);
+
+    protected abstract Resume doGet(Object id);
+
+    protected abstract void doSave(Resume resume, Object id);
+
+    protected abstract void doUpdate(Object id, Resume resume);
+
+    protected abstract void doDelete(Object id);
+
+    protected abstract boolean isExist(Object id);
+
+    private Object getExistedSearchKey(String uuid) {
+        Object id = getId(uuid);
+        if (!isExist(id)) {
+            throw new NotExistStorageException(uuid);
         }
+        return id;
+    }
+
+    private Object getNotExistedSearchKey(String uuid) {
+        Object id = getId(uuid);
+        if (isExist(id)) {
+            throw new ExistStorageException(uuid);
+        }
+        return id;
     }
 
     @Override
     public void update(Resume resume) {
-        doUpdate(doOperation(resume.getUuid(), new NotExistStorageException(resume.getUuid()), 1), resume);
+        doUpdate(getExistedSearchKey(resume.getUuid()), resume);
     }
-
-    protected abstract int getId(String uuid);
 
     @Override
     public Resume get(String uuid) {
-        return doGet(doOperation(uuid, new NotExistStorageException(uuid), 1));
+        return doGet(getExistedSearchKey(uuid));
     }
-
-    protected abstract Resume doGet(int id);
-
-    protected abstract void doUpdate(int id, Resume resume);
 
     @Override
     public void save(Resume resume) {
-        doSave(resume, doOperation(resume.getUuid(), new ExistStorageException(resume.getUuid()), -1));
+        doSave(resume, getNotExistedSearchKey(resume.getUuid()));
     }
-
-    protected abstract void doSave(Resume resume, int id);
 
     @Override
     public void delete(String uuid) {
-        doDelete(doOperation(uuid, new NotExistStorageException(uuid), 1));
+        doDelete(getExistedSearchKey(uuid));
         System.out.printf("%s resume was deleted\n", uuid);
     }
-
-    protected abstract void doDelete(int id);
 }

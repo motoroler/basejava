@@ -22,7 +22,7 @@ public class ArrayStorage extends AbstractArrayStorage {
      * @return index of uuid in the storage, if it exists in the storage. Otherwise -1 will be returned
      */
     @Override
-    protected int getId(String uuid) {
+    protected Object getId(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;

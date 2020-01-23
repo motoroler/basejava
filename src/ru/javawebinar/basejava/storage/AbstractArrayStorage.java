@@ -10,12 +10,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    protected abstract Object getId(String uuid);
+
+    protected abstract void fillDeletedElement(int id);
+
+    protected abstract void insertElement(Resume resume, int id);
+
     @Override
     public int size() {
         return size;
     }
-
-    protected abstract int getId(String uuid);
 
     @Override
     public void clear() {
@@ -32,34 +36,35 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    protected abstract void fillDeletedElement(int id);
-
-    protected abstract void insertElement(Resume resume, int id);
-
     @Override
-    protected Resume doGet(int id) {
-        return storage[id];
+    protected Resume doGet(Object id) {
+        return storage[(Integer) id];
     }
 
     @Override
-    protected void doUpdate(int id, Resume resume) {
-        storage[id] = resume;
+    protected void doUpdate(Object id, Resume resume) {
+        storage[(Integer) id] = resume;
     }
 
     @Override
-    protected void doSave(Resume resume, int id) {
+    protected void doSave(Resume resume, Object id) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("WARNING! Storage is full!", resume.getUuid());
         } else {
-            insertElement(resume, id);
+            insertElement(resume, (Integer) id);
             size++;
             System.out.printf("New resume %s was added to the storage\n", resume);
         }
     }
 
     @Override
-    protected void doDelete(int id) {
-        fillDeletedElement(id);
+    protected void doDelete(Object id) {
+        fillDeletedElement((Integer) id);
         storage[size-- - 1] = null;
+    }
+
+    @Override
+    protected boolean isExist(Object id) {
+        return ((Integer) id) >= 0;
     }
 }

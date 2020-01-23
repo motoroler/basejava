@@ -13,18 +13,18 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doDelete(int id) {
-        storage.remove(id);
+    protected void doDelete(Object id) {
+        storage.remove(((Integer) id).intValue());
     }
 
     @Override
-    protected Resume doGet(int index) {
-        return storage.get(index);
+    protected Resume doGet(Object index) {
+        return (Integer) index >= 0 ? storage.get((Integer) index) : null;
     }
 
     @Override
-    protected void doUpdate(int id, Resume resume) {
-        storage.set(id, resume);
+    protected void doUpdate(Object id, Resume resume) {
+        storage.set(((Integer) id).intValue(), resume);
     }
 
     @Override
@@ -39,18 +39,23 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Resume resume, int id) {
+    protected void doSave(Resume resume, Object id) {
         storage.add(resume);
         System.out.printf("New resume %s was added to the storage\n", resume);
     }
 
     @Override
-    protected int getId(String uuid) {
+    protected Object getId(String uuid) {
         for (int i = 0; i < size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    protected boolean isExist(Object id) {
+        return (doGet(id) != null);
     }
 }
