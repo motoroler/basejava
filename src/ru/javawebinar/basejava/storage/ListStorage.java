@@ -3,9 +3,10 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    private final static LinkedList<Resume> storage = new LinkedList<>();
+    private final static List<Resume> storage = new LinkedList<>();
 
     @Override
     public int size() {
@@ -14,17 +15,17 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object id) {
-        storage.remove(((Integer) id).intValue());
+        storage.remove((int) id);
     }
 
     @Override
-    protected Resume doGet(Object index) {
-        return (Integer) index >= 0 ? storage.get((Integer) index) : null;
+    protected Resume doGet(Object id) {
+        return (int) id >= 0 ? storage.get((int) id) : null;
     }
 
     @Override
     protected void doUpdate(Object id, Resume resume) {
-        storage.set(((Integer) id).intValue(), resume);
+        storage.set((int) id, resume);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getId(String uuid) {
+    protected Integer getId(String uuid) {
         for (int i = 0; i < size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;

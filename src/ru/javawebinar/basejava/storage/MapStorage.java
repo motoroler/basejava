@@ -44,7 +44,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getId(String uuid) {
+    protected String getId(String uuid) {
         return uuid;
     }
 
