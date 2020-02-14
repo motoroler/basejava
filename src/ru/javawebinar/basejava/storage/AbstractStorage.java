@@ -6,7 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract Object getId(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
     protected abstract Resume doGet(Object id);
 
@@ -40,7 +40,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     private Object getExistedSearchKey(String uuid) {
-        Object id = getId(uuid);
+        Object id = getSearchKey(uuid);
         if (!isExist(id)) {
             throw new NotExistStorageException(uuid);
         }
@@ -48,7 +48,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     private Object getNotExistedSearchKey(String uuid) {
-        Object id = getId(uuid);
+        Object id = getSearchKey(uuid);
         if (isExist(id)) {
             throw new ExistStorageException(uuid);
         }

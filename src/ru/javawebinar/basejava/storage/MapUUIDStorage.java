@@ -2,10 +2,13 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class MapStorage extends AbstractStorage {
+public class MapUUIDStorage extends AbstractStorage {
     private final static Map<String, Resume> storage = new HashMap<>();
 
     @Override
@@ -34,17 +37,20 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(Resume[]::new);
+    public List<Resume> getAllSorted() {
+        return storage.values().stream().
+                sorted(Comparator.comparing(Resume::getUuid)).
+                collect(Collectors.toList());
     }
 
     @Override
     protected void doSave(Resume resume, Object id) {
         storage.put((String) id, resume);
+        System.out.printf("New resume %s was added to the storage\n", resume);
     }
 
     @Override
-    protected String getId(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 

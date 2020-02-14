@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.storage.ArrayStorage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Interactive test for ru.javawebinar.basejava.storage.ArrayStorage implementation
@@ -67,14 +68,12 @@ public class MainArray {
     }
 
     static void printAll() {
-        Resume[] all = ARRAY_STORAGE.getAll();
+        List<Resume> all = ARRAY_STORAGE.getAllSorted();
         System.out.println("----------------------------");
-        if (all.length == 0) {
+        if (all.size() == 0) {
             System.out.println("Empty");
         } else {
-            for (Resume resume : all) {
-                System.out.println(resume);
-            }
+            System.out.println("all = " + all);
         }
         System.out.println("----------------------------");
     }

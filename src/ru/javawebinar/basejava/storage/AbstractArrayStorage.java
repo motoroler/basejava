@@ -26,14 +26,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         System.out.println("The storage was cleared");
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    @Override
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
-
     @Override
     protected Resume doGet(Object id) {
         return storage[(int) id];
