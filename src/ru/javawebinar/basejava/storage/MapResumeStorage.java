@@ -2,8 +2,10 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class MapResumeStorage extends AbstractStorage {
     private final static Map<String, Resume> storage = new HashMap<>();
@@ -11,6 +13,11 @@ public class MapResumeStorage extends AbstractStorage {
     @Override
     public int size() {
         return storage.size();
+    }
+
+    @Override
+    public void clear() {
+        storage.clear();
     }
 
     @Override
@@ -29,18 +36,6 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public void clear() {
-        storage.clear();
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        return storage.values().stream().
-                sorted(Comparator.comparing(Resume::getUuid)).
-                collect(Collectors.toList());
-    }
-
-    @Override
     protected void doSave(Resume resume, Object id) {
         storage.put(resume.getUuid(), resume);
         System.out.printf("New resume %s was added to the storage\n", resume);
@@ -54,5 +49,10 @@ public class MapResumeStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object id) {
         return !Objects.isNull(id);
+    }
+
+    @Override
+    protected Stream<Resume> doAllSorted() {
+        return storage.values().stream();
     }
 }

@@ -68,7 +68,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume resume1 = new Resume(UUID_1, FULLNAME_1);
+        Resume resume1 = new Resume(UUID_1, FULLNAME_2);
         storage.update(resume1);
         Assert.assertEquals(resume1, storage.get(UUID_1));
     }

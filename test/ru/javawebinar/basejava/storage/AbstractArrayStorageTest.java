@@ -15,6 +15,6 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         for (int i = storage.size(); i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
             storage.save(new Resume(Integer.toString(i + 1)));
         }
-        Assert.assertThrows("Extra resume could be added", StorageException.class, () -> storage.save(new Resume()));
+        Assert.assertThrows("Extra resume could be added", StorageException.class, () -> storage.save(new Resume("John Galt")));
     }
 }

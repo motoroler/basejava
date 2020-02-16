@@ -2,10 +2,9 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ListStorage extends AbstractStorage {
     private final static List<Resume> storage = new LinkedList<>();
@@ -13,6 +12,12 @@ public class ListStorage extends AbstractStorage {
     @Override
     public int size() {
         return storage.size();
+    }
+
+    @Override
+    public void clear() {
+        storage.clear();
+        System.out.println("The storage was cleared");
     }
 
     @Override
@@ -28,19 +33,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected void doUpdate(Object id, Resume resume) {
         storage.set((int) id, resume);
-    }
-
-    @Override
-    public void clear() {
-        storage.clear();
-        System.out.println("The storage was cleared");
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        return storage.stream()
-                .sorted(Comparator.comparing(Resume::getUuid))
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -62,6 +54,11 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object id) {
         return (doGet(id) != null);
+    }
+
+    @Override
+    protected Stream<Resume> doAllSorted() {
+        return storage.stream();
     }
 
 }

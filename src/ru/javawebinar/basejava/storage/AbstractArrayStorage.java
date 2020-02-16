@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     public final static int STORAGE_LIMIT = 10_000;
@@ -56,5 +57,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object id) {
         return ((int) id) >= 0;
+    }
+
+    @Override
+    protected Stream<Resume> doAllSorted() {
+        return Stream.of(Arrays.copyOf(storage, size));
     }
 }

@@ -12,10 +12,6 @@ public class Resume {
     private final String uuid;
     private final String fullName;
 
-    public Resume() {
-        this(UUID.randomUUID().toString(), "dummy");
-    }
-
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
